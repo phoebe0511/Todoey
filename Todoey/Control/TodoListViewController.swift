@@ -10,8 +10,14 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
     var itemArray = ["Eat launch🍱", "領錢", "喝飲料🎊"]
+    let DEFAULT_NAME = "TodoeyItemArray"
+    let defaults = UserDefaults()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let items = defaults.array(forKey: DEFAULT_NAME){
+            itemArray = items as! [String]
+        }
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -34,16 +40,29 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(itemArray[indexPath.row])
-        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        for i in 0...itemArray.count {
+            let id_path = IndexPath(row: i, section: 0)
+            if id_path.row != indexPath.row{
+                tableView.cellForRow(at: id_path)?.accessoryType = .none
+            }
+        }
+        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark
+        {
+            tableView.cellForRow(at: indexPath)?.accessoryType = .none
+        }else{
+            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        }
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    //MARK: Action of buttons
     @IBAction func btnPressedAdd(_ sender: UIBarButtonItem) {
         var textFiled = UITextField()
         let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add Item", style: .default) { (alertaction) in
             if let textSrt = textFiled.text {
                 self.itemArray.append(textSrt)
+                self.defaults.set(self.itemArray, forKey: "TodoeyItemArray")
                 self.tableView.reloadData()
             }
         }
