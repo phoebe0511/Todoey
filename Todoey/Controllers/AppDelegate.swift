@@ -43,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     // MARK: - Core Data stack
-    
+    //使用時才會load到memory中
     lazy var persistentContainer: NSPersistentContainer = {
         /*
          The persistent container for the application. This implementation
